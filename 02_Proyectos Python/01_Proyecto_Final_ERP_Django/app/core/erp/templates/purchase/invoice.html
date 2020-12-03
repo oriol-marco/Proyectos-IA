@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<style>
+    .img-invoice {
+        width: 50px;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .head {
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+
+    .text-center{
+        text-align: center;
+    }
+</style>
+<body>
+<img src="{{ icon }}" class="img-invoice">
+<p class="head">
+    {{ comp.name|upper }}<br>
+    {{ comp.address|upper }}
+</p>
+<p>
+    <b>FACTURA:</b> {{ purchase.id }}<br>
+    <b>FECHA DE COMPRA:</b> {{ purchase.date_joined }}<br>
+    <b>PROVEEDOR:</b> {{ purchase.prov.name|upper }}<br>
+    <b>CIF:</b> {{ purchase.prov.CIF }}<br>
+</p>
+<table id="invoice">
+    <thead>
+    <tr>
+        <th style="width: 20%;">CATEGORIA</th>
+        <th style="width: 40%;">PRODUCTO</th>
+        <th style="width: 10%;">CANT</th>
+        <th style="width: 15%;">COSTE UNITARIO</th>
+        <th style="width: 15%;">TOTAL</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for d in purchase.inventory_set.all %}
+        <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
+            <td>{{ d.prod.cat.name }}</td>
+            <td>{{ d.prod.name }}</td>
+            <td class="text-center">{{ d.cant }}</td>
+            <td class="text-center">€{{ d.price }}</td>
+            <td style="text-align: right;">€{{ d.total }}</td>
+        </tr>
+    {% endfor %}
+    <tr style="border-top: 1px solid black; padding-top: 4px;">
+        <td colspan="4"><b>SUBTOTAL</b></td>
+        <td style="text-align: right">€{{ purchase.subtotal }}</td>
+    </tr>
+    <tr style="padding-top: 0px;">
+        <td colspan="4"><b>IVA 21%</b></td>
+        <td style="text-align: right">€{{ purchase.iva }}</td>
+    </tr>
+    <tr style="padding-top: 0px;">
+        <td colspan="4"><b>TOTAL A PAGAR</b></td>
+        <td style="text-align: right">€{{ purchase.total }}</td>
+    </tr>
+    </tbody>
+</table>
+<table style="margin-top: 250px;">
+    <thead>
+    <tr>
+        <th>****GRACIAS POR SU COMPRA****</th>
+    </tr>
+    </thead>
+</table>
+</body>
+</html>
